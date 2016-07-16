@@ -44,7 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Difference.cs" />
+    <Compile Include="Differences\Difference.cs" />
+    <Compile Include="Differences\DifferenceArrayCount.cs" />
+    <Compile Include="Differences\DifferenceInType.cs" />
+    <Compile Include="Differences\DifferencePropertyNotInDestination.cs" />
+    <Compile Include="Differences\DifferencePropertyNotInSource.cs" />
+    <Compile Include="Differences\DifferenceValue.cs" />
     <Compile Include="JsonDiff.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

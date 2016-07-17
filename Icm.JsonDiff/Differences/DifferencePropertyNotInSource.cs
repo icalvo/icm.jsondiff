@@ -1,18 +1,19 @@
-using Newtonsoft.Json.Linq;
+using System;
 
 namespace Icm.JsonDiff.Differences
 {
-    public class DifferencePropertyNotInSource : Difference<JObject>
+    public class DifferencePropertyNotInSource : Difference
     {
-        public DifferencePropertyNotInSource(JObject token1, JObject token2, JProperty prop) : base(token1, token2)
+        public DifferencePropertyNotInSource(string jsonPath, string propertyName)
+            : base(jsonPath)
         {
-            Prop = prop;
+            if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
+            PropertyName = propertyName;
         }
 
-        private JProperty Prop { get; }
-
+        public string PropertyName { get; }
 
         protected override string Description =>
-            $"property {Prop.Name} is in destination but not in source";
+            $"property {PropertyName} is in destination but not in source";
     }
 }

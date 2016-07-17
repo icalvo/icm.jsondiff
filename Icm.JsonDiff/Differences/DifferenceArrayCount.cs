@@ -1,19 +1,52 @@
-using Newtonsoft.Json.Linq;
-
 namespace Icm.JsonDiff.Differences
 {
-    public class DifferenceArrayCount : Difference<JArray>
+    public class DifferenceArrayCount : Difference
     {
-        public DifferenceArrayCount(JToken token1, JToken token2) 
-            : base((JArray)token1, (JArray)token2)
-        {
-        }
+        public int Count1 { get; set; }
+        public int Count2 { get; set; }
 
-        public DifferenceArrayCount(JArray token1, JArray token2) : base(token1, token2)
+        public DifferenceArrayCount(string jsonPath, int count1, int count2)
+            : base(jsonPath)
         {
+            Count1 = count1;
+            Count2 = count2;
         }
 
         protected override string Description =>
-            "arrays don't have same number of elements";
+            $"arrays have {Count1} elements in source and {Count2} elements in destination";
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((DifferenceArrayCount) obj);
+        }
+
+        private bool Equals(DifferenceArrayCount other)
+        {
+            return base.Equals(other) && Count1 == other.Count1 && Count2 == other.Count2;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ Count1;
+                hashCode = (hashCode*397) ^ Count2;
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(DifferenceArrayCount left, DifferenceArrayCount right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(DifferenceArrayCount left, DifferenceArrayCount right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

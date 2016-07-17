@@ -13,7 +13,7 @@ namespace Icm.JsonDiff.Differences
         {
         }
 
-        public override string Kind =>
-            "Arrays don't have same number of elements";
+        protected override string Description =>
+            "arrays don't have same number of elements";
     }
 }

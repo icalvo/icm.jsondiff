@@ -1,27 +1,45 @@
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace Icm.JsonDiff.Differences
 {
 
-    public abstract class Difference { }
-
-    public abstract class Difference<T> : Difference where T : JToken
+    public abstract class Difference
     {
-        protected Difference(T token1, T token2)
+        protected Difference(JToken token1, JToken token2)
         {
+            if (token1 == null) throw new ArgumentNullException(nameof(token1));
+            if (token2 == null) throw new ArgumentNullException(nameof(token2));
+
             Token1 = token1;
             Token2 = token2;
         }
 
-        public abstract string Kind { get; }
-        public T Token1 { get; }
-        public T Token2 { get; }
+        protected abstract string Description { get; }
+        public JToken Token1 { get; }
+        public JToken Token2 { get; }
+    }
+
+    public abstract class Difference<T> : Difference where T : JToken
+    {
+        protected Difference(T token1, T token2)
+            : base(token1, token2)
+        {
+            if (token1 == null) throw new ArgumentNullException(nameof(token1));
+            if (token2 == null) throw new ArgumentNullException(nameof(token2));
+
+            Token1 = token1;
+            Token2 = token2;
+        }
+
+        public new T Token1 { get; }
+        public new T Token2 { get; }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Difference<T>) obj);
         }
 
@@ -52,7 +70,8 @@ namespace Icm.JsonDiff.Differences
 
         public override string ToString()
         {
-            return $"'{Kind}' '{Token1.Path}'";
+            var path = Token1.Path == "" ? "root object" : Token1.Path;
+            return $"In {path}, {Description}";
         }
     }
 }

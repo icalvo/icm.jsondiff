@@ -11,7 +11,7 @@ namespace Icm.JsonDiff.Differences
 
         private JProperty Prop { get; }
 
-        public override string Kind => 
-            $"Property {Prop.Name} in source but not in destination";
+        protected override string Description => 
+            $"property {Prop.Name} is in source but not in destination";
     }
 }

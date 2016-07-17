@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Icm.JsonDiff.Differences;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,8 @@ namespace Icm.JsonDiff
 {
     public static class JsonDiff
     {
+        [SuppressMessage("ReSharper", "TryCastAlwaysSucceeds",
+            Justification = "Check for null seems less readable in this case.")]
         public static IEnumerable<Difference> Diff(JToken json1, JToken json2)
         {
             if (json1.GetType() != json2.GetType())
@@ -85,9 +88,7 @@ namespace Icm.JsonDiff
 
         private static IEnumerable<Difference> DiffValue(JValue json1, JValue json2)
         {
-            string value1 = json1.Value<string>();
-            string value2 = json2.Value<string>();
-            if (value1 != value2)
+            if (!Equals(json1.Value, json2.Value))
             {
                 yield return new DifferenceValue(json1, json2);
             }

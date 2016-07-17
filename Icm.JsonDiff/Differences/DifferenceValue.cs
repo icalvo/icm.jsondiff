@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace Icm.JsonDiff.Differences
@@ -13,7 +14,32 @@ namespace Icm.JsonDiff.Differences
         {
         }
 
-        public override string Kind =>
-            $"Value {Token1.Value<string>()} != {Token2.Value<string>()}";
+        private static string Representation(JValue value)
+        {
+            switch (value.Type)
+            {
+                case JTokenType.String:
+                    return $"'{value.Value<string>()}'";
+                case JTokenType.Integer:
+                case JTokenType.Float:
+                case JTokenType.Boolean:
+                case JTokenType.Bytes:
+                case JTokenType.Guid:
+                case JTokenType.Uri:
+                case JTokenType.TimeSpan:
+                    return value.Value.ToString();
+                case JTokenType.Null:
+                    return "null";
+                case JTokenType.Undefined:
+                    return "undefined";
+                case JTokenType.Date:
+                    return $"'{value.Value<DateTime>():O}'";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        protected override string Description => 
+            $"value {Representation(Token1)} != {Representation(Token2)}";
     }
 }

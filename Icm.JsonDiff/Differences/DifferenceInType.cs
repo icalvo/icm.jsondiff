@@ -7,7 +7,7 @@ namespace Icm.JsonDiff.Differences
         {
         }
 
-        public override string Kind =>
-            "Type diff";
+        protected override string Description =>
+            "there is a type difference";
     }
 }
